@@ -69,6 +69,7 @@
 		    max-width: 7rem;
 		    width: 100%;
 		    flex-basis: 0;
+		    display: none; // hide icon
 		}
 		.o-app-name {
 			color: $mk-apps-color; 

@@ -83,10 +83,11 @@
 		.mk_apps_sidebar_panel {
 			width: $mk-sidebar-small-width;
 			.mk_apps_sidebar_name {
-				display: none;
+				//display: none; always show label
 			}
 			.mk_apps_sidebar_icon {
-				margin-right: 0 !important;
+				//margin-right: 0 !important;
+				display: none;
 			}
 		}
 		.o_action_manager {
