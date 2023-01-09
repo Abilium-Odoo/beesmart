@@ -1,7 +1,7 @@
 node {
     
     stage('Git Stage') {
-        checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'jenkins01', url: 'git@github.com:Abilium-Odoo/beesmart.git']]])
+        checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '', url: 'https://github.com/Abilium-Odoo/beesmart.git']]])
     }
 
     stage('Deploy:Prod') {
