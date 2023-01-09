@@ -78,6 +78,10 @@
 		.o_action_manager {
 			padding-left: $mk-sidebar-large-width;
 		}
+		.mk_apps_sidebar_icon {
+            //margin-right: 0 !important;
+            display: none;
+        }
 	}
 	.mk_sidebar_type_small {
 		.mk_apps_sidebar_panel {
