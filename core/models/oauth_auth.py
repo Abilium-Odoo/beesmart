@@ -14,6 +14,7 @@ class ResUsers(models.Model):
         #    response = requests.get(endpoint, headers={'Authorization': 'Bearer %s' % access_token}, timeout=10)
         #else:
         _logger.info(endpoint)
+        _logger.info(access_token)
         response = requests.get(endpoint, params={'access_token': access_token}, timeout=10)
 
         _logger.info(response)
