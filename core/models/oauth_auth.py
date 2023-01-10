@@ -43,6 +43,7 @@ class ResUsers(models.Model):
             'oauth_uid': oauth_uid,
             'oauth_access_token': params['access_token'],
             'active': True,
+            'totp_enabled': False,
         }
 
     @api.model
