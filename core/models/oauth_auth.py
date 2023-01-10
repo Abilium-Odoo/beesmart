@@ -31,6 +31,35 @@ class ResUsers(models.Model):
         }
 
     @api.model
+    def _auth_oauth_validate(self, provider, access_token):
+        _logger.info("in validate")
+        """ return the validation data corresponding to the access token """
+        oauth_provider = self.env['auth.oauth.provider'].browse(provider)
+        validation = self._auth_oauth_rpc(oauth_provider.validation_endpoint, access_token)
+        if validation.get("error"):
+            raise Exception(validation['error'])
+        if oauth_provider.data_endpoint:
+            data = self._auth_oauth_rpc(oauth_provider.data_endpoint, access_token)
+            validation.update(data)
+        # unify subject key, pop all possible and get most sensible. When this
+        # is reworked, BC should be dropped and only the `sub` key should be
+        # used (here, in _generate_signup_values, and in _auth_oauth_signin)
+        subject = next(filter(None, [
+            validation.pop(key, None)
+            for key in [
+                'sub',  # standard
+                'id',  # google v1 userinfo, facebook opengraph
+                'user_id',  # google tokeninfo, odoo (tokeninfo)
+            ]
+        ]), None)
+        if not subject:
+            raise AccessDenied('Missing subject identity')
+        validation['user_id'] = subject
+
+        _logger.info("after validate %s" % str(validation))
+        return validation
+
+    @api.model
     def _auth_oauth_signin(self, provider, validation, params):
         """ retrieve and sign in the user corresponding to provider and validated access token
             :param provider: oauth provider id (int)
