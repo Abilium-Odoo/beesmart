@@ -74,8 +74,10 @@ class ResUsers(models.Model):
         ]), None)
         if not subject:
             raise AccessDenied('Missing subject identity')
-        validation['user_id'] = subject
 
+        validation['user_id'] = subject
+        if oauth_provider.name == "BeeSmart":
+            validation['user_id'] = validation['username']
         _logger.info("after validate %s" % str(validation))
         return validation
 
