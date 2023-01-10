@@ -33,7 +33,7 @@ class ResUsers(models.Model):
         oauth_provider = self.env['auth.oauth.provider'].browse(provider)
         email = validation.get('username', 'provider_%s_user_%s' % (provider, oauth_uid))
         if oauth_provider.name == "BeeSmart":
-            name = validation.get('prename', '') + validation.get('lastname', 'email')
+            name = (validation.get('prename', '') + " " + validation.get('lastname', 'email')).lstrip()
         else:
             name = validation.get('name', email)
         return {

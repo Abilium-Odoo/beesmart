@@ -27,6 +27,7 @@
 
     # always loaded
     'data': [
+        'views/login.xml'
     ],
     # only loaded in demonstration mode
     'demo': [
