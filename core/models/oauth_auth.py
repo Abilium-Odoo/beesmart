@@ -12,6 +12,20 @@ _logger = logging.getLogger(__name__)
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
+    def _auth_oauth_rpc(self, endpoint, access_token):
+        response = requests.get(endpoint, params={'access_token': access_token}, timeout=10)
+
+        if response.ok: # nb: could be a successful failure
+            return response.json()
+
+        auth_challenge = werkzeug.http.parse_www_authenticate_header(
+            response.headers.get('WWW-Authenticate'))
+
+        if auth_challenge.type == 'bearer' and 'error' in auth_challenge:
+            return dict(auth_challenge)
+
+        return {'error': 'invalid_request'}
+
     @api.model
     def _generate_signup_values(self, provider, validation, params):
         oauth_uid = validation['user_id']
