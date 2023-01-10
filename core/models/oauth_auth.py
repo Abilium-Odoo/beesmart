@@ -1,5 +1,6 @@
 import requests
 import werkzeug.http
+import json
 from odoo import api, models
 from odoo.exceptions import AccessDenied, UserError
 from odoo.addons.auth_signup.models.res_users import SignupError
