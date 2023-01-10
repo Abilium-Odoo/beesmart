@@ -36,5 +36,9 @@
                 </form>
             </xpath>
         </template>
+
+        <template id="core.providers" inherit_id="auth_oauth.providers">
+            <xpath expr="//em" position="replace"></xpath>
+        </template>
     </data>
 </odoo>
