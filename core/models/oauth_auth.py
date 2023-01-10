@@ -37,9 +37,12 @@ class ResUsers(models.Model):
         oauth_provider = self.env['auth.oauth.provider'].browse(provider)
         validation = self._auth_oauth_rpc(oauth_provider.validation_endpoint, access_token)
         if validation.get("error"):
+            _logger.info("error in validation")
             raise Exception(validation['error'])
         if oauth_provider.data_endpoint:
+            _logger.info("before getting data")
             data = self._auth_oauth_rpc(oauth_provider.data_endpoint, access_token)
+            _logger.info("data is %s" % str(data))
             validation.update(data)
         # unify subject key, pop all possible and get most sensible. When this
         # is reworked, BC should be dropped and only the `sub` key should be
