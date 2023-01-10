@@ -51,6 +51,8 @@ class ResUsers(models.Model):
         oauth_provider = self.env['auth.oauth.provider'].browse(provider)
         validation = self._auth_oauth_rpc(oauth_provider.validation_endpoint, access_token)
         _logger.info("val is %s" % validation)
+        if oauth_provider.name == "BeeSmart":
+            validation = {'user_id': validation}
         if validation.get("error"):
             _logger.info("error in validation")
             raise Exception(validation['error'])
