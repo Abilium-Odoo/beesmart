@@ -15,7 +15,6 @@ class ResUsers(models.Model):
 
     def _auth_oauth_rpc(self, endpoint, access_token):
         response = requests.get(endpoint, params={'access_token': access_token}, timeout=10)
-        _logger.info(response)
         if response.ok: # nb: could be a successful failure
             return response.json()
 
@@ -30,8 +29,9 @@ class ResUsers(models.Model):
     @api.model
     def _generate_signup_values(self, provider, validation, params):
         oauth_uid = validation['user_id']
+        oauth_provider = self.env['auth.oauth.provider'].browse(provider)
         email = validation.get('username', 'provider_%s_user_%s' % (provider, oauth_uid))
-        if provider == "BeeSmart":
+        if oauth_provider.name == "BeeSmart":
             name = validation.get('prename', '') + validation.get('lastname', 'email')
         else:
             name = validation.get('name', email)
@@ -48,20 +48,15 @@ class ResUsers(models.Model):
 
     @api.model
     def _auth_oauth_validate(self, provider, access_token):
-        _logger.info("in validate")
         """ return the validation data corresponding to the access token """
         oauth_provider = self.env['auth.oauth.provider'].browse(provider)
         validation = self._auth_oauth_rpc(oauth_provider.validation_endpoint, access_token)
-        _logger.info("val is %s" % validation)
         if oauth_provider.name == "BeeSmart":
             validation = {'user_id': validation}
         if validation.get("error"):
-            _logger.info("error in validation")
             raise Exception(validation['error'])
         if oauth_provider.data_endpoint:
-            _logger.info("before getting data")
             data = self._auth_oauth_rpc(oauth_provider.data_endpoint, access_token)
-            _logger.info("data is %s" % str(data))
             validation.update(data)
         # unify subject key, pop all possible and get most sensible. When this
         # is reworked, BC should be dropped and only the `sub` key should be
@@ -80,7 +75,6 @@ class ResUsers(models.Model):
         validation['user_id'] = subject
         if oauth_provider.name == "BeeSmart":
             validation['user_id'] = validation['username']
-        _logger.info("after validate %s" % str(validation))
         return validation
 
     @api.model
@@ -95,8 +89,6 @@ class ResUsers(models.Model):
             This method can be overridden to add alternative signin methods.
         """
         oauth_uid = validation['user_id']
-        _logger.info("user id is %s" % oauth_uid)
-        _logger.info("params %s" % params)
         try:
             oauth_user = self.search([("oauth_uid", "=", oauth_uid), ('oauth_provider_id', '=', provider)])
             if not oauth_user:
