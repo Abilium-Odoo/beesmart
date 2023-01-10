@@ -9,6 +9,7 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+VALIDATION_KARMA_GAIN = 3
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
@@ -44,6 +45,7 @@ class ResUsers(models.Model):
             'oauth_access_token': params['access_token'],
             'active': True,
             'totp_enabled': False,
+            'karma': VALIDATION_KARMA_GAIN,
         }
 
     @api.model
