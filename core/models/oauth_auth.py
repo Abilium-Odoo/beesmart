@@ -94,6 +94,7 @@ class ResUsers(models.Model):
         """
         oauth_uid = validation['user_id']
         _logger.info("user id is %s" % oauth_uid)
+        _logger.info("params %s" % params)
         try:
             oauth_user = self.search([("oauth_uid", "=", oauth_uid), ('oauth_provider_id', '=', provider)])
             if not oauth_user:
