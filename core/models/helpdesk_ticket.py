@@ -15,3 +15,18 @@ class HelpdeskTicket(models.Model):
             ticket.write({'user_id': random.choice(ticket.user_ids.mapped('id'))})
         _logger.info("assigned user %s" % ticket.user_id)
         return ticket
+
+
+    def _track_template(self, tracking):
+        res = super()._track_template(tracking)
+        ticket = self[0]
+        if "stage_id" in tracking and ticket.stage_id.mail_template_id:
+            res["stage_id"] = (
+                ticket.stage_id.mail_template_id,
+                {
+                    "auto_delete_message": True,
+                    "subtype_id": self.env.ref('mail.mt_note').id,
+                    "email_layout_xmlid": "mail.mail_notification_light",
+                },
+            )
+        return res
