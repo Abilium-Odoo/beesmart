@@ -18,7 +18,7 @@ class HelpdeskTicket(models.Model):
 
 
     def _track_template(self, tracking):
-        res = super()._track_template(tracking)
+        res = dict()
         ticket = self[0]
         if "stage_id" in tracking and ticket.stage_id.mail_template_id:
             res["stage_id"] = (
