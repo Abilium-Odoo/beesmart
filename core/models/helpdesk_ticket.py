@@ -20,7 +20,7 @@ class HelpdeskTicket(models.Model):
             _logger.info("result is %s" % result.group(1))
 
         ticket = super(HelpdeskTicket, self).message_new(msg, custom_values)
-        if not ticket.user_id: # not assigned to anyone
+        if not ticket.user_id and ticket.user_ids: # not assigned to anyone
             ticket.write({'user_id': random.choice(ticket.user_ids.mapped('id'))})
         _logger.info("assigned user %s" % ticket.user_id)
         return ticket
