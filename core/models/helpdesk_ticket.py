@@ -15,7 +15,7 @@ class HelpdeskTicket(models.Model):
         result = re.search(r"BeeSmart - Anfrage von (.*) via Kontaktformular", msg.get('subject'))
         if result and result.group(1):
             custom_values = {
-                "partner_email": str(result.group(1))
+                "cc": str(result.group(1))
             }
             _logger.info("result is %s" % result.group(1))
 
