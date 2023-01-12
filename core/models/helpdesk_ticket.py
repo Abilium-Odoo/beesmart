@@ -10,6 +10,12 @@ class HelpdeskTicket(models.Model):
 
     @api.model
     def message_new(self, msg, custom_values=None):
+        _logger.info("received mail from %s with reply to %s" % (msg.get("from"), msg.get("reply_to")))
+        if msg.get('reply_to') is not None and msg.get("from") == "noreply@beesmart.org":
+            custom_values = {
+                "partner_email": msg.get("reply_to")
+            }
+
         ticket = super(HelpdeskTicket, self).message_new(msg, custom_values)
         if not ticket.user_id: # not assigned to anyone
             ticket.write({'user_id': random.choice(ticket.user_ids.mapped('id'))})
