@@ -1,6 +1,7 @@
 from odoo import models, api
 import random
 import logging
+import re
 
 _logger = logging.getLogger(__name__)
 
@@ -11,10 +12,12 @@ class HelpdeskTicket(models.Model):
     @api.model
     def message_new(self, msg, custom_values=None):
         _logger.info("received mail %s" % (msg))
-        if msg.get('reply_to') is not None and msg.get("from") == "noreply@beesmart.org":
+        result = re.search(r"BeeSmart - Anfrage von (.*) via Kontaktformular", msg.get('subject'))
+        if result and result.group(1):
             custom_values = {
-                "partner_email": msg.get("reply_to")
+                "partner_email": result.group(1)
             }
+            _logger.info("result is %s" % result.group(1))
 
         ticket = super(HelpdeskTicket, self).message_new(msg, custom_values)
         if not ticket.user_id: # not assigned to anyone
