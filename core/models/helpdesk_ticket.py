@@ -14,9 +14,9 @@ class HelpdeskTicket(models.Model):
         _logger.info("received mail %s" % (msg))
         result = re.search(r"BeeSmart - Anfrage von (.*) via Kontaktformular", msg.get('subject'))
         if result and result.group(1):
-            custom_values = {
-                "cc": str(result.group(1))
-            }
+            msg.update({
+                "from": str(result.group(1))
+            })
             _logger.info("result is %s" % result.group(1))
 
         ticket = super(HelpdeskTicket, self).message_new(msg, custom_values)
